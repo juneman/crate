@@ -1,0 +1,63 @@
+.. highlight:: sh
+
+.. _bootstrap_checks:
+
+================
+Bootstrap Checks
+================
+
+If you are binding to a network reachable IP address, CrateDB performs a number
+of bootstrap checks during startup. These checks examine your setup and will
+prevent startup if a problem is detected.
+
+This best practices guide is intended to help you configure your setup so that
+CrateDB passes the bootstrap checks and can perform optimally.
+
+If you are binding to the loopback address, the bootstrap checks will not be
+run, but it is still a good idea to follow these instructions.
+
+System Settings
+===============
+
+Official Packages
+-----------------
+
+If you are using one of the official packages, all of the necessary operating
+system configuration is handled for you.
+
+Tarball
+-------
+
+If you have installed CrateDB from a tarball, you must manually configure a
+number of operating system settings.
+
+Edit ``/etc/security/limits.conf`` and configure these lines::
+
+    crate soft nofile unlimited
+    crate hard nofile unlimited
+
+    crate soft memlock unlimited
+    crate hard memlock unlimited
+
+    crate soft as 2048
+    crate hard as 2048
+
+If you are running on Linux, also configure::
+
+    crate soft nproc 2048
+    crate hard nproc 2048
+
+Here, ``crate`` is the user that runs the CrateDB daemon.
+
+Linux users should also edit ``/etc/sysctl.conf`` and configure::
+
+    vm.max_map_count = 262144
+
+
+Garbage Collection
+==================
+
+CrateDB uses `the CMS garbage collector`_ and this should not be changed or
+else performance may be seriously degraded.
+
+.. _the CMS garbage collector: https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html
