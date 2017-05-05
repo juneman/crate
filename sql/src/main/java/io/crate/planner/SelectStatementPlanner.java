@@ -82,7 +82,9 @@ class SelectStatementPlanner {
             if (querySpec.hasAggregates() || querySpec.groupBy().isPresent()) {
                 return invokeConsumingPlanner(table, context);
             }
-            if (querySpec.where().docKeys().isPresent() && !table.tableRelation().tableInfo().isAlias()) {
+            // TODO: Remove ESGetStatementPlanner and create new consumer for nested queries.
+            if (querySpec.where().docKeys().isPresent() &&
+                !table.tableRelation().tableInfo().isAlias()) {
                 SubqueryPlanner subqueryPlanner = new SubqueryPlanner(context);
                 Map<Plan, SelectSymbol> subQueries = subqueryPlanner.planSubQueries(table.querySpec());
                 return MultiPhasePlan.createIfNeeded(ESGetStatementPlanner.convert(table, context), subQueries);
