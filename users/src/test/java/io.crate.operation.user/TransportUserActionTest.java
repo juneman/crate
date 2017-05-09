@@ -21,7 +21,10 @@ package io.crate.operation.user;
 import io.crate.exceptions.ConflictException;
 import io.crate.test.integration.CrateUnitTest;
 import org.elasticsearch.ResourceNotFoundException;
+import org.elasticsearch.cluster.metadata.MetaData;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -55,7 +58,15 @@ public class TransportUserActionTest extends CrateUnitTest {
     public void testDropUserNoUsersAtAll() throws Exception {
         expectedException.expect(ResourceNotFoundException.class);
         expectedException.expectMessage("User does not exist");
-        TransportDropUserAction.dropUser(null, "root");
+        TransportDropUserAction.dropUser(MetaData.builder(), null, "root", false);
+    }
+
+    @Test
+    public void testDropUsersIfExistsNoUsersAtAll() throws Exception {
+        MetaData.Builder builder = MetaData.builder();
+        long res = TransportDropUserAction.dropUser(builder, null, "arthur", true);
+        assertThat(users(builder).size(), is(0));
+        assertThat(res, is(0L));
     }
 
     @Test
@@ -63,15 +74,36 @@ public class TransportUserActionTest extends CrateUnitTest {
         expectedException.expect(ResourceNotFoundException.class);
         expectedException.expectMessage("User does not exist");
         TransportDropUserAction.dropUser(
+            MetaData.builder(),
             UsersMetaData.of("arthur"),
-            "trillian"
+            "trillian",
+            false
         );
+    }
+
+    @Test
+    public void testDropIfExistsNonExistingUser() throws Exception {
+        MetaData.Builder mdBuilder = MetaData.builder();
+        long res = TransportDropUserAction.dropUser(
+            mdBuilder,
+            UsersMetaData.of("arthur"),
+            "trillian",
+            true
+        );
+        assertThat(users(mdBuilder), contains("arthur"));
+        assertThat(res, is(0L));
     }
 
     @Test
     public void testDropUser() throws Exception {
         UsersMetaData oldMetaData = UsersMetaData.of("ford", "arthur");
-        UsersMetaData newMetaData = TransportDropUserAction.dropUser(oldMetaData, "arthur");
-        assertThat(newMetaData.users(), contains("ford"));
+        MetaData.Builder mdBuilder = MetaData.builder();
+        long res = TransportDropUserAction.dropUser(mdBuilder, oldMetaData, "arthur", false);
+        assertThat(users(mdBuilder), contains("ford"));
+        assertThat(res, is(1L));
+    }
+
+    private static List<String> users(MetaData.Builder mdBuilder) {
+        return ((UsersMetaData)mdBuilder.build().custom(UsersMetaData.TYPE)).users();
     }
 }

@@ -81,4 +81,10 @@ public class UserManagementIntegrationTest extends SQLTransportIntegrationTest {
         execute("drop user ford");
         assertUserDoesntExist("ford");
     }
+
+    @Test
+    public void testDropUserIfExists() throws Exception {
+        execute("drop user if exists ford");
+        assertThat(response.rowCount(), is(0L));
+    }
 }
