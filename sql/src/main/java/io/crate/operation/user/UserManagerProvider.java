@@ -40,6 +40,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.transport.TransportService;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 @Singleton
@@ -89,6 +90,12 @@ public class UserManagerProvider extends UserServiceFactoryLoader implements Pro
         @Override
         public void checkPermission(AnalyzedStatement analysis, SessionContext sessionContext) {
 
+        }
+
+        @Nullable
+        @Override
+        public User findUser(String userName) {
+            return null;
         }
     }
 }

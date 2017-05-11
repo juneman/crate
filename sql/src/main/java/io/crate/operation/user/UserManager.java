@@ -27,6 +27,7 @@ import io.crate.analyze.AnalyzedStatement;
 import io.crate.analyze.CreateUserAnalyzedStatement;
 import io.crate.analyze.DropUserAnalyzedStatement;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -56,5 +57,13 @@ public interface UserManager {
      * @param sessionContext    current session context
      */
     void checkPermission(AnalyzedStatement analysis, SessionContext sessionContext);
+
+    /**
+     * finds a user by username
+     * @param userName
+     * @return
+     */
+    @Nullable
+    User findUser(String userName);
 
 }

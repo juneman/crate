@@ -24,6 +24,7 @@ package io.crate.operation.auth;
 
 import com.google.common.annotations.VisibleForTesting;
 import io.crate.operation.user.User;
+import io.crate.operation.user.UserManagerProvider;
 import io.crate.protocols.postgres.Messages;
 import io.crate.settings.CrateSetting;
 import io.crate.types.DataTypes;
@@ -82,9 +83,10 @@ public class AuthenticationProvider extends UserServiceFactoryLoader implements 
     };
 
     @Inject
-    public AuthenticationProvider(Settings settings) {
+    public AuthenticationProvider(Settings settings, UserManagerProvider userManagerProvider) {
         super(settings);
-        authService = userServiceFactory() == null ? NOOP_AUTH : userServiceFactory().authService(settings);
+        authService = userServiceFactory() == null ? NOOP_AUTH :
+            userServiceFactory().authService(settings, userManagerProvider.get());
     }
 
     public Authentication get() {
