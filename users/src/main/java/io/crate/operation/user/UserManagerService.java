@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableSet;
 import io.crate.action.FutureActionListener;
 import io.crate.action.sql.SessionContext;
 import io.crate.analyze.*;
+import io.crate.analyze.relations.AnalyzedRelation;
+import io.crate.analyze.relations.AnalyzedRelationVisitor;
 import org.elasticsearch.cluster.ClusterChangedEvent;
 import org.elasticsearch.cluster.ClusterStateListener;
 import org.elasticsearch.cluster.metadata.MetaData;
@@ -113,11 +115,14 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         return null;
     }
 
+
+    boolean isSuperUser(@Nullable User user){
+        return user != null && user.roles().contains(User.Role.SUPERUSER);
+    }
+
     private class PermissionVisitor extends AnalyzedStatementVisitor<SessionContext, Boolean> {
 
-        boolean isSuperUser(@Nullable User user){
-            return user != null && user.roles().contains(User.Role.SUPERUSER);
-        }
+        private final SelectStatementPermissionVisitor selectVisitor = new SelectStatementPermissionVisitor();
 
         @Override
         protected Boolean visitAnalyzedStatement(AnalyzedStatement analyzedStatement,
@@ -128,12 +133,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         @Override
         protected Boolean visitSelectStatement(SelectAnalyzedStatement analysis,
                                                SessionContext sessionContext) {
-
-            QueriedTable queriedTable = (QueriedTable) analysis.relation();
-            if (queriedTable.tableRelation().tableInfo().ident().name().equals("users") &&
-                queriedTable.tableRelation().tableInfo().ident().schema().equals("sys") &&
-                !isSuperUser(sessionContext.user()))
-                {
+            if (!selectVisitor.process(analysis.relation(), sessionContext)) {
                 throw new UnsupportedOperationException(String.format(Locale.ENGLISH,
                     "User \"%s\" is not authorized to execute statement \"%s\"",
                     sessionContext.user() == null ? null: sessionContext.user().name(), analysis));
@@ -159,6 +159,21 @@ public class UserManagerService implements UserManager, ClusterStateListener {
                     sessionContext.user() == null ? null: sessionContext.user().name(), analysis));
             }
             return true;
+        }
+    }
+
+    private class SelectStatementPermissionVisitor extends AnalyzedRelationVisitor<SessionContext, Boolean> {
+
+        @Override
+        protected Boolean visitAnalyzedRelation(AnalyzedRelation relation, SessionContext context) {
+            return true;
+        }
+
+        @Override
+        public Boolean visitQueriedTable(QueriedTable table, SessionContext context) {
+            return !(table.tableRelation().tableInfo().ident().name().equals("users") &&
+                     table.tableRelation().tableInfo().ident().schema().equals("sys") &&
+                     !isSuperUser(context.user()));
         }
     }
 }
