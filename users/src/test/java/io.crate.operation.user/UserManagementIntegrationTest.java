@@ -39,12 +39,12 @@ public class UserManagementIntegrationTest extends SQLTransportIntegrationTest {
 
     SQLOperations.Session createSuperUserSession(@Nullable String defaultSchema, Set<Option> options) {
         SQLOperations sqlOperations = internalCluster().getInstance(SQLOperations.class);
-        return sqlOperations.createSession(defaultSchema, options, DEFAULT_SOFT_LIMIT, UserManagerService.CRATE_USER);
+        return sqlOperations.createSession(defaultSchema, UserManagerService.CRATE_USER, options, DEFAULT_SOFT_LIMIT);
     }
 
     SQLOperations.Session createUserSession(@Nullable String defaultSchema, Set<Option> options) {
         SQLOperations sqlOperations = internalCluster().getInstance(SQLOperations.class);
-        return sqlOperations.createSession(defaultSchema, options, DEFAULT_SOFT_LIMIT, new User("normal", ImmutableSet.of()));
+        return sqlOperations.createSession(defaultSchema, new User("normal", ImmutableSet.of()), options, DEFAULT_SOFT_LIMIT);
     }
 
     private void assertUserIsCreated(String userName) throws Exception {
