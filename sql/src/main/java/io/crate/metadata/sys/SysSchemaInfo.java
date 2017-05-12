@@ -90,7 +90,9 @@ public class SysSchemaInfo implements SchemaInfo {
 
     }
 
-    public void registerSysTable(String name, TableInfo tableInfo) {
-        tableInfos.put(name, tableInfo);
+    public void registerSysTable(TableInfo tableInfo) {
+        assert tableInfo.ident().schema().equals("sys") : "table is not in sys schema";
+        assert !tableInfos.containsKey(tableInfo.ident().name()) : "table already exists";
+        tableInfos.put(tableInfo.ident().name(), tableInfo);
     }
 }

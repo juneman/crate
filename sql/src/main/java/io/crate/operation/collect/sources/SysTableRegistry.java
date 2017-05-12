@@ -51,7 +51,7 @@ public class SysTableRegistry {
     public void registerSysTable(TableInfo tableInfo, Supplier<CompletableFuture<? extends Iterable<?>>> iterableSupplier,
                                  Map<ColumnIdent, RowCollectExpressionFactory> expressionFactories) {
         TableIdent ident = tableInfo.ident();
-        sysSchemaInfo.registerSysTable(ident.name(), tableInfo);
+        sysSchemaInfo.registerSysTable(tableInfo);
         systemCollectSource.registerIterableGetter(ident.fqn(), iterableSupplier);
         RowContextReferenceResolver.INSTANCE.registerTableFactory(ident, expressionFactories);
     }
