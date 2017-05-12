@@ -24,8 +24,6 @@ package io.crate.sql.tree;
 
 import com.google.common.base.MoreObjects;
 
-import java.util.Objects;
-
 public class CreateUser extends Statement {
 
     private final String name;
@@ -40,7 +38,7 @@ public class CreateUser extends Statement {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name);
+        return name.hashCode();
     }
 
     @Override
