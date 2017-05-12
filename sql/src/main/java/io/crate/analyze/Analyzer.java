@@ -71,7 +71,6 @@ public class Analyzer {
     private final UnboundAnalyzer unboundAnalyzer;
     private final CreateFunctionAnalyzer createFunctionAnalyzer;
     private final DropFunctionAnalyzer dropFunctionAnalyzer;
-    private final CreateUserAnalyzer createUserAnalyzer;
     private final DropUserAnalyzer dropUserAnalyzer;
     private final UserManager userManager;
 
@@ -118,7 +117,6 @@ public class Analyzer {
         this.restoreSnapshotAnalyzer = new RestoreSnapshotAnalyzer(repositoryService, schemas);
         this.createFunctionAnalyzer = new CreateFunctionAnalyzer();
         this.dropFunctionAnalyzer = new DropFunctionAnalyzer();
-        this.createUserAnalyzer = new CreateUserAnalyzer();
         this.dropUserAnalyzer = new DropUserAnalyzer();
         this.userManager = userManagerProvider.get();
     }
@@ -293,7 +291,7 @@ public class Analyzer {
 
         @Override
         public AnalyzedStatement visitCreateUser(CreateUser node, Analysis context) {
-            return createUserAnalyzer.analyze(node);
+            return new CreateUserAnalyzedStatement(node.name());
         }
 
         @Override
