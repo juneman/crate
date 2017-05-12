@@ -21,6 +21,8 @@ Breaking Changes
 Changes
 =======
 
+ - Added support for joins on virtual tables.
+
  - Added full support for ``DISTINCT`` on queries where ``GROUP BY``
    is present.
 
