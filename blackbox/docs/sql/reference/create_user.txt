@@ -18,6 +18,8 @@ Description
 
 ``CREATE USER`` is a management statement to create a new database user in the
 CrateDB cluster. The newly created user does not have any special privileges.
+The created user can be used to authenticate against CrateDB, see
+:doc:`/administration/hba`.
 
 For usage of the ``CREATE USER`` statement see
 :doc:`/sql/administration/user_management`.
