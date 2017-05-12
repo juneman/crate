@@ -30,14 +30,12 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-public abstract class UserServiceFactoryLoader {
+public class UserServiceFactoryLoader {
 
-    private final UserServiceFactory userServiceFactory;
-
-    public UserServiceFactoryLoader(Settings settings) {
+    @Nullable
+    public static UserServiceFactory load(Settings settings) {
         if (!SharedSettings.ENTERPRISE_LICENSE_SETTING.setting().get(settings)) {
-            this.userServiceFactory = null;
-            return;
+            return null;
         }
         Iterator<UserServiceFactory> authIterator = ServiceLoader.load(UserServiceFactory.class).iterator();
         UserServiceFactory factory = null;
@@ -47,11 +45,6 @@ public abstract class UserServiceFactoryLoader {
             }
             factory = authIterator.next();
         }
-        userServiceFactory = factory;
-    }
-
-    @Nullable
-    public UserServiceFactory userServiceFactory() {
-        return userServiceFactory;
+        return factory;
     }
 }

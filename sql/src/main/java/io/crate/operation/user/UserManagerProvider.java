@@ -28,6 +28,7 @@ import io.crate.analyze.CreateUserAnalyzedStatement;
 import io.crate.analyze.DropUserAnalyzedStatement;
 import io.crate.concurrent.CompletableFutures;
 import io.crate.exceptions.UnsupportedFeatureException;
+import io.crate.operation.auth.UserServiceFactory;
 import io.crate.operation.auth.UserServiceFactoryLoader;
 import io.crate.operation.collect.sources.SysTableRegistry;
 import org.elasticsearch.action.support.ActionFilters;
@@ -56,11 +57,11 @@ public class UserManagerProvider extends UserServiceFactoryLoader implements Pro
                                ActionFilters actionFilters,
                                IndexNameExpressionResolver indexNameExpressionResolver,
                                SysTableRegistry sysTableRegistry) {
-        super(settings);
-        if (userServiceFactory() == null) {
+        UserServiceFactory userServiceFactory = UserServiceFactoryLoader.load(settings);
+        if (userServiceFactory == null) {
             this.userManager = new NoopUserManager();
         } else {
-            this.userManager = userServiceFactory().userManager(settings, transportService, clusterService, threadPool,
+            this.userManager = userServiceFactory.userManager(settings, transportService, clusterService, threadPool,
                 actionFilters, indexNameExpressionResolver, sysTableRegistry);
         }
     }

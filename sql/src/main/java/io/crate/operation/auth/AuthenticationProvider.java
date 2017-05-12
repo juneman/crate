@@ -84,9 +84,9 @@ public class AuthenticationProvider extends UserServiceFactoryLoader implements 
 
     @Inject
     public AuthenticationProvider(Settings settings, UserManagerProvider userManagerProvider) {
-        super(settings);
-        authService = userServiceFactory() == null ? NOOP_AUTH :
-            userServiceFactory().authService(settings, userManagerProvider.get());
+        UserServiceFactory userServiceFactory = UserServiceFactoryLoader.load(settings);
+        authService = userServiceFactory == null ? NOOP_AUTH :
+            userServiceFactory.authService(settings, userManagerProvider.get());
     }
 
     public Authentication get() {
