@@ -24,8 +24,6 @@ package io.crate.sql.tree;
 
 import com.google.common.base.MoreObjects;
 
-import java.util.Objects;
-
 public class DropUser extends Statement {
 
     private final String name;
@@ -46,7 +44,7 @@ public class DropUser extends Statement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, ifExists);
+        return 31 * name.hashCode() + (ifExists ? 1 : 0);
     }
 
     @Override
