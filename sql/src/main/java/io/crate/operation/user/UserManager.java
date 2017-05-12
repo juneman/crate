@@ -24,7 +24,6 @@ package io.crate.operation.user;
 
 import io.crate.action.sql.SessionContext;
 import io.crate.analyze.AnalyzedStatement;
-import io.crate.analyze.CreateUserAnalyzedStatement;
 import io.crate.analyze.DropUserAnalyzedStatement;
 
 import javax.annotation.Nullable;
@@ -38,10 +37,10 @@ public interface UserManager {
     /**
      * creates a user
      *
-     * @param analysis      analysed CREATE USER statement
+     * @param userName      name of the user to create
      * @return a future which returns the number of rows when the User is created
      */
-    CompletableFuture<Long> createUser(CreateUserAnalyzedStatement analysis);
+    CompletableFuture<Long> createUser(String userName);
 
 
     /**

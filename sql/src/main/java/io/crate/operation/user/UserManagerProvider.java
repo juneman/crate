@@ -24,7 +24,6 @@ package io.crate.operation.user;
 
 import io.crate.action.sql.SessionContext;
 import io.crate.analyze.AnalyzedStatement;
-import io.crate.analyze.CreateUserAnalyzedStatement;
 import io.crate.analyze.DropUserAnalyzedStatement;
 import io.crate.concurrent.CompletableFutures;
 import io.crate.exceptions.UnsupportedFeatureException;
@@ -75,7 +74,7 @@ public class UserManagerProvider extends UserServiceFactoryLoader implements Pro
     private static class NoopUserManager implements UserManager {
 
         @Override
-        public CompletableFuture<Long> createUser(CreateUserAnalyzedStatement analysis) {
+        public CompletableFuture<Long> createUser(String userName) {
             return CompletableFutures.failedFuture(
                 new UnsupportedFeatureException("CREATE USER is only supported in enterprise version")
             );

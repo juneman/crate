@@ -70,9 +70,9 @@ public class UserManagerService implements UserManager, ClusterStateListener {
     }
 
     @Override
-    public CompletableFuture<Long> createUser(CreateUserAnalyzedStatement analysis) {
+    public CompletableFuture<Long> createUser(String userName) {
         FutureActionListener<WriteUserResponse, Long> listener = new FutureActionListener<>(r -> 1L);
-        transportCreateUserAction.execute(new CreateUserRequest(analysis.userName()), listener);
+        transportCreateUserAction.execute(new CreateUserRequest(userName), listener);
         return listener;
     }
 
