@@ -138,5 +138,4 @@ public class UserManagementIntegrationTest extends SQLTransportIntegrationTest {
         expectedException.expectMessage("User \"null\" is not authorized to execute statement");
         execute("select * from sys.users");
     }
-
 }
