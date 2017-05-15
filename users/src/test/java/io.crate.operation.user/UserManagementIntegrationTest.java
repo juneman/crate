@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableSet;
 import io.crate.action.sql.Option;
 import io.crate.action.sql.SQLActionException;
 import io.crate.action.sql.SQLOperations;
-import io.crate.action.sql.SessionContext;
 import io.crate.integrationtests.SQLTransportIntegrationTest;
 import io.crate.testing.SQLResponse;
 import io.crate.testing.TestingHelpers;
@@ -140,5 +139,4 @@ public class UserManagementIntegrationTest extends SQLTransportIntegrationTest {
             "UnauthorizedException: User \"null\" is not authorized to access table \"sys.users\"");
         execute("select * from sys.users");
     }
-
 }
