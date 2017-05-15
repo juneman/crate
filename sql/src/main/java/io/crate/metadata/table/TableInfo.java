@@ -21,6 +21,7 @@
 
 package io.crate.metadata.table;
 
+import com.google.common.collect.ImmutableSet;
 import io.crate.analyze.WhereClause;
 import io.crate.metadata.*;
 import io.crate.operation.user.User;
@@ -66,5 +67,7 @@ public interface TableInfo extends Iterable<Reference> {
 
     Set<Operation> supportedOperations();
 
-    Set<User.Role> requiredUserRoles();
+    default Set<User.Role> requiredUserRoles() {
+        return ImmutableSet.of();
+    }
 }

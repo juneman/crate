@@ -22,7 +22,6 @@
 package io.crate.metadata.doc;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import io.crate.Version;
 import io.crate.analyze.PartitionedTableParameterInfo;
 import io.crate.analyze.TableParameterInfo;
@@ -33,7 +32,6 @@ import io.crate.exceptions.UnavailableShardsException;
 import io.crate.metadata.*;
 import io.crate.metadata.sys.TableColumn;
 import io.crate.metadata.table.*;
-import io.crate.operation.user.User;
 import org.apache.lucene.util.BytesRef;
 import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
@@ -371,11 +369,6 @@ public class DocTableInfo implements TableInfo, ShardedTable, StoredTable {
     @Override
     public Set<Operation> supportedOperations() {
         return supportedOperations;
-    }
-
-    @Override
-    public Set<User.Role> requiredUserRoles() {
-        return ImmutableSet.of();
     }
 
     public String getAnalyzerForColumnIdent(ColumnIdent ident) {
