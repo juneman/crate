@@ -81,7 +81,7 @@ public class SchemasTest {
 
     private TableIdent authorized = new TableIdent("sys", "authorized");
 
-    private TableIdent unauthorized = new TableIdent("sys", "unauthorized");
+    private TableIdent unauthorized = new TableIdent("sys", "checks");
 
     private User arthur = new User("arthur", ImmutableSet.of());
 
@@ -111,24 +111,6 @@ public class SchemasTest {
             @Override
             public Set<User.Role> requiredUserRoles() {
                 return ImmutableSet.of(User.Role.SUPERUSER);
-            }
-        });
-        sysSchemaInfo.registerSysTable(new StaticTableInfo(unauthorized,
-            ImmutableMap.of(), null, ImmutableList.of()) {
-
-            @Override
-            public RowGranularity rowGranularity() {
-                return RowGranularity.DOC;
-            }
-
-            @Override
-            public Routing getRouting(WhereClause whereClause, @Nullable String preference) {
-                return null;
-            }
-
-            @Override
-            public Set<User.Role> requiredUserRoles() {
-                return ImmutableSet.of();
             }
         });
         schemasWithSysTables = new Schemas(Settings.EMPTY, ImmutableMap.of(
