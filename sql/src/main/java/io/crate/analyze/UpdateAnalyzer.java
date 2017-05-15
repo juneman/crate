@@ -62,10 +62,10 @@ public class UpdateAnalyzer {
     private final ValueNormalizer valueNormalizer;
 
 
-    UpdateAnalyzer(Schemas schemas, Functions functions, RelationAnalyzer relationAnalyzer) {
+    UpdateAnalyzer(Functions functions, RelationAnalyzer relationAnalyzer) {
         this.functions = functions;
         this.relationAnalyzer = relationAnalyzer;
-        this.valueNormalizer = new ValueNormalizer(schemas);
+        this.valueNormalizer = new ValueNormalizer();
     }
 
     public AnalyzedStatement analyze(Update node, Analysis analysis) {
@@ -177,7 +177,7 @@ public class UpdateAnalyzer {
         Symbol value = normalizer.normalize(
             expressionAnalyzer.convert(node.expression(), expressionAnalysisContext), transactionContext);
         try {
-            value = valueNormalizer.normalizeInputForReference(value, reference, user);
+            value = valueNormalizer.normalizeInputForReference(value, reference, tableInfo);
         } catch (IllegalArgumentException | UnsupportedOperationException e) {
             throw new ColumnValidationException(ident.sqlFqn(), e);
         }

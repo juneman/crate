@@ -200,7 +200,7 @@ class InsertFromSubQueryAnalyzer {
             ReplaceMode.COPY,
             null,
             tableRelation);
-        ValueNormalizer valuesNormalizer = new ValueNormalizer(schemas);
+        ValueNormalizer valuesNormalizer = new ValueNormalizer();
 
         ValuesResolver valuesResolver = new ValuesResolver(tableRelation, targetColumns);
         ValuesAwareExpressionAnalyzer valuesAwareExpressionAnalyzer = new ValuesAwareExpressionAnalyzer(
@@ -215,7 +215,8 @@ class InsertFromSubQueryAnalyzer {
             Symbol valueSymbol = normalizer.normalize(
                 valuesAwareExpressionAnalyzer.convert(assignment.expression(), expressionAnalysisContext),
                 transactionContext);
-            Symbol assignmentExpression = valuesNormalizer.normalizeInputForReference(valueSymbol, columnName, sessionContext.user());
+            Symbol assignmentExpression = valuesNormalizer.normalizeInputForReference(valueSymbol, columnName,
+                tableRelation.tableInfo());
 
             updateAssignments.put(columnName, assignmentExpression);
         }

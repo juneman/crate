@@ -73,14 +73,14 @@ public class ValueNormalizerTest extends CrateUnitTest {
     private ValueNormalizer valueNormalizer;
 
     private Symbol normalizeInputForReference(Symbol valueSymbol, Reference reference) {
-        return valueNormalizer.normalizeInputForReference(valueSymbol, reference, null);
+        return valueNormalizer.normalizeInputForReference(valueSymbol, reference, userTableInfo);
     }
 
     @Before
     public void prepare() {
         Schemas schemas = mock(Schemas.class);
         when(schemas.getTableInfo(TEST_TABLE_IDENT, null)).thenReturn(userTableInfo);
-        valueNormalizer = new ValueNormalizer(schemas);
+        valueNormalizer = new ValueNormalizer();
     }
 
     @Test

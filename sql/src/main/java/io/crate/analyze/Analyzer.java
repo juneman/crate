@@ -107,7 +107,7 @@ public class Analyzer {
         this.insertFromValuesAnalyzer = new InsertFromValuesAnalyzer(functions, schemas);
         this.insertFromSubQueryAnalyzer = new InsertFromSubQueryAnalyzer(functions, schemas, relationAnalyzer);
         this.copyAnalyzer = new CopyAnalyzer(schemas, functions);
-        this.updateAnalyzer = new UpdateAnalyzer(schemas, functions, relationAnalyzer);
+        this.updateAnalyzer = new UpdateAnalyzer(functions, relationAnalyzer);
         this.deleteAnalyzer = new DeleteAnalyzer(functions, relationAnalyzer);
         this.dropRepositoryAnalyzer = new DropRepositoryAnalyzer(repositoryService);
         this.createRepositoryAnalyzer = new CreateRepositoryAnalyzer(repositoryService, repositoryParamValidator);
