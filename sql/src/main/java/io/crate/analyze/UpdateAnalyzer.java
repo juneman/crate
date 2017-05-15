@@ -35,7 +35,6 @@ import io.crate.metadata.*;
 import io.crate.metadata.doc.DocSysColumns;
 import io.crate.metadata.table.Operation;
 import io.crate.metadata.table.TableInfo;
-import io.crate.operation.user.User;
 import io.crate.sql.tree.*;
 import io.crate.types.ArrayType;
 import io.crate.types.DataTypes;
@@ -142,8 +141,7 @@ public class UpdateAnalyzer {
                     expressionAnalyzer,
                     columnExpressionAnalyzer,
                     expressionAnalysisContext,
-                    analysis.transactionContext(),
-                    analysis.sessionContext().user()
+                    analysis.transactionContext()
                 );
             }
             nestedAnalyzedStatements.add(nestedAnalyzedStatement);
@@ -160,8 +158,7 @@ public class UpdateAnalyzer {
                                    ExpressionAnalyzer expressionAnalyzer,
                                    ExpressionAnalyzer columnExpressionAnalyzer,
                                    ExpressionAnalysisContext expressionAnalysisContext,
-                                   TransactionContext transactionContext,
-                                   User user) {
+                                   TransactionContext transactionContext) {
         UPDATE_SUBSCRIPT_VALIDATOR.process(node.columnName(), false);
 
         // unknown columns in strict objects handled in here

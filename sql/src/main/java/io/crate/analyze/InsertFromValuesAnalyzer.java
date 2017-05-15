@@ -38,7 +38,6 @@ import io.crate.executor.transport.TransportShardUpsertAction;
 import io.crate.metadata.*;
 import io.crate.metadata.doc.DocTableInfo;
 import io.crate.metadata.table.Operation;
-import io.crate.operation.user.User;
 import io.crate.sql.tree.*;
 import io.crate.types.DataType;
 import org.apache.lucene.util.BytesRef;
@@ -143,8 +142,7 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                 node.onDuplicateKeyAssignments(),
                 statement,
                 analysis.parameterContext(),
-                refToLiteral,
-                analysis.sessionContext().user());
+                refToLiteral);
         }
         return statement;
     }
@@ -191,8 +189,7 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                                List<Assignment> assignments,
                                InsertFromValuesAnalyzedStatement statement,
                                ParameterContext parameterContext,
-                               ReferenceToLiteralConverter refToLiteral,
-                               User user) {
+                               ReferenceToLiteralConverter refToLiteral) {
         validateValuesSize(node.values(), statement, tableRelation);
 
         try {
@@ -218,8 +215,7 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                         refToLiteral,
                         numPks,
                         idFunction,
-                        i,
-                        user
+                        i
                     );
                 }
             } else {
@@ -238,8 +234,7 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                     refToLiteral,
                     numPks,
                     idFunction,
-                    -1,
-                    user
+                    -1
                 );
             }
         } catch (IOException e) {
@@ -261,8 +256,7 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                            ReferenceToLiteralConverter refToLiteral,
                            int numPrimaryKeys,
                            Function<List<BytesRef>, String> idFunction,
-                           int bulkIdx,
-                           User user) throws IOException {
+                           int bulkIdx) throws IOException {
         if (context.tableInfo().isPartitioned()) {
             context.newPartitionMap();
         }
