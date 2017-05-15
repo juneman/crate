@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-public class UserServiceFactoryLoader {
+public final class UserServiceFactoryLoader {
 
     @Nullable
     public static UserServiceFactory load(Settings settings) {

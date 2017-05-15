@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 @Singleton
-public class UserManagerProvider extends UserServiceFactoryLoader implements Provider<UserManager> {
+public class UserManagerProvider implements Provider<UserManager> {
 
     private final UserManager userManager;
 
