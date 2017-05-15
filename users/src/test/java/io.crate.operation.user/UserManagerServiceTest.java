@@ -23,6 +23,7 @@ import io.crate.action.sql.Option;
 import io.crate.action.sql.SessionContext;
 import io.crate.analyze.CreateUserAnalyzedStatement;
 import io.crate.analyze.DropUserAnalyzedStatement;
+import io.crate.exceptions.UnauthorizedException;
 import io.crate.test.integration.CrateDummyClusterServiceUnitTest;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class UserManagerServiceTest extends CrateDummyClusterServiceUnitTest {
 
     @Test
     public void testCreateUserStatementCheckPermissionFalse() {
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(UnauthorizedException.class);
         expectedException.expectMessage("User \"null\" is not authorized to execute statement");
         UserManagerService userManagerService = new UserManagerService(null, null, clusterService);
         userManagerService.checkPermission(new CreateUserAnalyzedStatement(""),
@@ -68,7 +69,7 @@ public class UserManagerServiceTest extends CrateDummyClusterServiceUnitTest {
 
     @Test
     public void testDropUserStatementCheckPermissionFalse() {
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(UnauthorizedException.class);
         expectedException.expectMessage("User \"null\" is not authorized to execute statement");
         UserManagerService userManagerService = new UserManagerService(null, null, clusterService);
         userManagerService.checkPermission(new DropUserAnalyzedStatement("", false),

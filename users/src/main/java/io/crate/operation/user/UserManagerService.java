@@ -24,6 +24,7 @@ import io.crate.action.sql.SessionContext;
 import io.crate.analyze.*;
 import io.crate.analyze.relations.AnalyzedRelation;
 import io.crate.analyze.relations.AnalyzedRelationVisitor;
+import io.crate.exceptions.UnauthorizedException;
 import org.elasticsearch.cluster.ClusterChangedEvent;
 import org.elasticsearch.cluster.ClusterStateListener;
 import org.elasticsearch.cluster.metadata.MetaData;
@@ -144,7 +145,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         protected Boolean visitCreateUserStatement(CreateUserAnalyzedStatement analysis,
                                                    SessionContext sessionContext) {
             if (!isSuperUser(sessionContext.user())){
-                throw new UnsupportedOperationException(String.format(Locale.ENGLISH, "User \"%s\" is not authorized to execute statement \"%s\"",
+                throw new UnauthorizedException(String.format(Locale.ENGLISH, "User \"%s\" is not authorized to execute statement \"%s\"",
                     sessionContext.user() == null ? null : sessionContext.user().name(), analysis));
             }
             return true;
@@ -154,7 +155,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         protected Boolean visitDropUserStatement(DropUserAnalyzedStatement analysis,
                                                  SessionContext sessionContext) {
             if (!isSuperUser(sessionContext.user())){
-                throw new UnsupportedOperationException(String.format(Locale.ENGLISH, "User \"%s\" is not authorized to execute statement \"%s\"",
+                throw new UnauthorizedException(String.format(Locale.ENGLISH, "User \"%s\" is not authorized to execute statement \"%s\"",
                     sessionContext.user() == null ? null: sessionContext.user().name(), analysis));
             }
             return true;
