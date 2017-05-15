@@ -29,6 +29,9 @@ import java.util.stream.Collectors;
 
 public final class CompletableFutures {
 
+    public static final CompletableFuture<Boolean> COMPLETED_TRUE = completedFuture(true);
+    public static final CompletableFuture<Boolean> COMPLETED_FALSE = completedFuture(false);
+
     private CompletableFutures() {
     }
 
@@ -39,6 +42,12 @@ public final class CompletableFutures {
     public static <T> CompletableFuture<T> failedFuture(Throwable t) {
         CompletableFuture<T> future = new CompletableFuture<>();
         future.completeExceptionally(t);
+        return future;
+    }
+
+    public static <T> CompletableFuture<T> completedFuture(T value) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        future.complete(value);
         return future;
     }
 
