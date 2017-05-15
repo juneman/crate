@@ -57,7 +57,11 @@ Linux users should also edit ``/etc/sysctl.conf`` and configure::
 Garbage Collection
 ==================
 
-CrateDB uses `the CMS garbage collector`_ and this should not be changed or
-else performance may be seriously degraded.
+CrateDB uses `the CMS garbage collector`_ and this should not be changed.
+
+.. WARNING::
+
+   If you use a different JVM garbage collector you may encounter serious
+   performance degradation or even data corruption.
 
 .. _the CMS garbage collector: https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html
