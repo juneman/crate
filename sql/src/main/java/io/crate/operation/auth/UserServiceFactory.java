@@ -47,12 +47,12 @@ public interface UserServiceFactory {
     /**
      * Return implementation of {@link UserManager} interface.
      */
-    UserManager userManager(Settings settings,
-                            TransportService transportService,
-                            ClusterService clusterService,
-                            ThreadPool threadPool,
-                            ActionFilters actionFilters,
-                            IndexNameExpressionResolver indexNameExpressionResolver,
-                            SysTableRegistry sysTableRegistry);
+    UserManager setupUserManager(Settings settings,
+                                 TransportService transportService,
+                                 ClusterService clusterService,
+                                 ThreadPool threadPool,
+                                 ActionFilters actionFilters,
+                                 IndexNameExpressionResolver indexNameExpressionResolver,
+                                 SysTableRegistry sysTableRegistry);
 
 }

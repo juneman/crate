@@ -60,7 +60,7 @@ public class UserManagerProvider extends UserServiceFactoryLoader implements Pro
         if (userServiceFactory == null) {
             this.userManager = new NoopUserManager();
         } else {
-            this.userManager = userServiceFactory.userManager(settings, transportService, clusterService, threadPool,
+            this.userManager = userServiceFactory.setupUserManager(settings, transportService, clusterService, threadPool,
                 actionFilters, indexNameExpressionResolver, sysTableRegistry);
         }
     }

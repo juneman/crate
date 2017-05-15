@@ -41,14 +41,17 @@ public class UserServiceFactoryImpl implements UserServiceFactory {
         return new HostBasedAuthentication(settings, userManager);
     }
 
+    /**
+     *  This mus only be called once as TransportActions are registered here.
+     */
     @Override
-    public UserManager userManager(Settings settings,
-                              TransportService transportService,
-                              ClusterService clusterService,
-                              ThreadPool threadPool,
-                              ActionFilters actionFilters,
-                              IndexNameExpressionResolver indexNameExpressionResolver,
-                              SysTableRegistry sysTableRegistry) {
+    public UserManager setupUserManager(Settings settings,
+                                        TransportService transportService,
+                                        ClusterService clusterService,
+                                        ThreadPool threadPool,
+                                        ActionFilters actionFilters,
+                                        IndexNameExpressionResolver indexNameExpressionResolver,
+                                        SysTableRegistry sysTableRegistry) {
         TransportCreateUserAction transportCreateAction = new TransportCreateUserAction(
             settings, transportService, clusterService, threadPool, actionFilters, indexNameExpressionResolver);
         TransportDropUserAction transportDropUserAction = new TransportDropUserAction(
