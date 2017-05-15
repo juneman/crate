@@ -58,7 +58,7 @@ public class UserManagerProvider implements Provider<UserManager> {
                                SysTableRegistry sysTableRegistry) {
         UserServiceFactory userServiceFactory = UserServiceFactoryLoader.load(settings);
         if (userServiceFactory == null) {
-            this.userManager = new NoopUserManager();
+            this.userManager = new UnsupportedUserManager();
         } else {
             this.userManager = userServiceFactory.setupUserManager(settings, transportService, clusterService, threadPool,
                 actionFilters, indexNameExpressionResolver, sysTableRegistry);
@@ -71,7 +71,7 @@ public class UserManagerProvider implements Provider<UserManager> {
         return userManager;
     }
 
-    private static class NoopUserManager implements UserManager {
+    private static class UnsupportedUserManager implements UserManager {
 
         @Override
         public CompletableFuture<Long> createUser(String userName) {
