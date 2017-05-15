@@ -47,7 +47,7 @@ public class AuthenticationMethodTest extends CrateUnitTest {
         List<User> users = ImmutableList.of(new User("crate", EnumSet.of(User.Role.SUPERUSER)));
 
         @Override
-        public Iterable<User> userGetter() {
+        public Iterable<User> users() {
             return users;
         }
     };

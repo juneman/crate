@@ -58,7 +58,7 @@ public class UserServiceFactoryImpl implements UserServiceFactory {
             settings, transportService, clusterService, threadPool, actionFilters, indexNameExpressionResolver);
         UserManagerService userManager = new UserManagerService(transportCreateAction, transportDropUserAction, clusterService);
         sysTableRegistry.registerSysTable(new SysUsersTableInfo(clusterService),
-            () -> CompletableFuture.completedFuture(userManager.userGetter()),
+            () -> CompletableFuture.completedFuture(userManager.users()),
             SysUsersTableInfo.sysUsersExpressions());
         return userManager;
     }

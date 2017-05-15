@@ -86,7 +86,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         return listener;
     }
 
-    public Iterable<User> userGetter() {
+    public Iterable<User> users() {
         return users;
     }
 
@@ -107,7 +107,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
 
     @Nullable
     public User findUser(String userName) {
-        for (User user: userGetter()) {
+        for (User user: users()) {
             if (userName.equals(user.name())) {
                 return user;
             }
