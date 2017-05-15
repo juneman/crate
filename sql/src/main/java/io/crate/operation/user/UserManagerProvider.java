@@ -88,7 +88,7 @@ public class UserManagerProvider implements Provider<UserManager> {
         }
 
         @Override
-        public void checkPermission(AnalyzedStatement analysis, SessionContext sessionContext) {
+        public void ensureAuthorized(AnalyzedStatement analysis, SessionContext sessionContext) {
 
         }
 
