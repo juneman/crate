@@ -115,7 +115,6 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         return null;
     }
 
-
     boolean isSuperUser(@Nullable User user){
         return user != null && user.roles().contains(User.Role.SUPERUSER);
     }
