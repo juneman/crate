@@ -21,6 +21,7 @@
 
 package io.crate.analyze;
 
+import io.crate.action.sql.SessionContext;
 import io.crate.data.Row;
 import io.crate.metadata.Schemas;
 import io.crate.metadata.TableIdent;
@@ -38,10 +39,10 @@ class AlterBlobTableAnalyzer {
         this.schemas = schemas;
     }
 
-    public AlterBlobTableAnalyzedStatement analyze(AlterBlobTable node, Row parameters) {
+    public AlterBlobTableAnalyzedStatement analyze(AlterBlobTable node, Row parameters, SessionContext sessionContext) {
         TableIdent tableIdent = tableToIdent(node.table());
         assert BlobSchemaInfo.NAME.equals(tableIdent.schema()) : "schema name must be 'blob'";
-        BlobTableInfo tableInfo = schemas.getTableInfo(tableIdent, null);
+        BlobTableInfo tableInfo = schemas.getTableInfo(tableIdent, sessionContext.user());
         TableParameter tableParameter = new TableParameter();
         if (node.genericProperties().isPresent()) {
             TablePropertiesAnalyzer.analyze(
