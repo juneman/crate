@@ -59,7 +59,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         clusterService.add(this);
     }
 
-    static Set<User> getUsersFromMetaData(@Nullable UsersMetaData metaData) {
+    static Set<User> getUsers(@Nullable UsersMetaData metaData) {
         ImmutableSet.Builder<User> usersBuilder = new ImmutableSet.Builder<User>().add(CRATE_USER);
         if (metaData != null) {
             for (String userName : metaData.users()) {
@@ -98,7 +98,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         if (!event.metaDataChanged()) {
             return;
         }
-        users = getUsersFromMetaData(event.state().metaData().custom(UsersMetaData.TYPE));
+        users = getUsers(event.state().metaData().custom(UsersMetaData.TYPE));
     }
 
 
