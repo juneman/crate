@@ -22,9 +22,11 @@
 
 package io.crate.metadata.table;
 
+import com.google.common.collect.ImmutableSet;
 import io.crate.metadata.ColumnIdent;
 import io.crate.metadata.Reference;
 import io.crate.metadata.TableIdent;
+import io.crate.operation.user.User;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -93,5 +95,10 @@ public abstract class StaticTableInfo implements TableInfo {
     @Override
     public Set<Operation> supportedOperations() {
         return Operation.SYS_READ_ONLY;
+    }
+
+    @Override
+    public Set<User.Role> requiredUserRoles() {
+        return ImmutableSet.of();
     }
 }

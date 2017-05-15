@@ -22,6 +22,7 @@
 package io.crate.metadata.blob;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.crate.Version;
 import io.crate.analyze.AlterBlobTableParameterInfo;
 import io.crate.analyze.TableParameterInfo;
@@ -31,6 +32,7 @@ import io.crate.metadata.table.Operation;
 import io.crate.metadata.table.ShardedTable;
 import io.crate.metadata.table.StoredTable;
 import io.crate.metadata.table.TableInfo;
+import io.crate.operation.user.User;
 import io.crate.types.DataType;
 import io.crate.types.DataTypes;
 import org.apache.lucene.util.BytesRef;
@@ -204,6 +206,11 @@ public class BlobTableInfo implements TableInfo, ShardedTable, StoredTable {
     @Override
     public Set<Operation> supportedOperations() {
         return Operation.BLOB_OPERATIONS;
+    }
+
+    @Override
+    public Set<User.Role> requiredUserRoles() {
+        return ImmutableSet.of();
     }
 
     public String concreteIndex() {

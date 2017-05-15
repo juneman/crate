@@ -84,7 +84,8 @@ class InsertFromSubQueryAnalyzer {
 
     public AnalyzedStatement analyze(InsertFromSubquery node, Analysis analysis) {
         DocTableInfo tableInfo = schemas.getTableInfo(
-            TableIdent.of(node.table(), analysis.sessionContext().defaultSchema()), Operation.INSERT);
+            TableIdent.of(node.table(), analysis.sessionContext().defaultSchema()),
+            Operation.INSERT, analysis.sessionContext().user());
 
         DocTableRelation tableRelation = new DocTableRelation(tableInfo);
         FieldProvider fieldProvider = new NameFieldProvider(tableRelation);
@@ -214,7 +215,7 @@ class InsertFromSubQueryAnalyzer {
             Symbol valueSymbol = normalizer.normalize(
                 valuesAwareExpressionAnalyzer.convert(assignment.expression(), expressionAnalysisContext),
                 transactionContext);
-            Symbol assignmentExpression = valuesNormalizer.normalizeInputForReference(valueSymbol, columnName);
+            Symbol assignmentExpression = valuesNormalizer.normalizeInputForReference(valueSymbol, columnName, sessionContext.user());
 
             updateAssignments.put(columnName, assignmentExpression);
         }

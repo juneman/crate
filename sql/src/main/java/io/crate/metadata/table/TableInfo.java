@@ -23,6 +23,7 @@ package io.crate.metadata.table;
 
 import io.crate.analyze.WhereClause;
 import io.crate.metadata.*;
+import io.crate.operation.user.User;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -64,4 +65,6 @@ public interface TableInfo extends Iterable<Reference> {
     Map<String, Object> tableParameters();
 
     Set<Operation> supportedOperations();
+
+    Set<User.Role> requiredUserRoles();
 }

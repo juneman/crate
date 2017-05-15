@@ -38,6 +38,7 @@ import io.crate.executor.transport.TransportShardUpsertAction;
 import io.crate.metadata.*;
 import io.crate.metadata.doc.DocTableInfo;
 import io.crate.metadata.table.Operation;
+import io.crate.operation.user.User;
 import io.crate.sql.tree.*;
 import io.crate.types.DataType;
 import org.apache.lucene.util.BytesRef;
@@ -83,7 +84,10 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
 
     public AnalyzedStatement analyze(InsertFromValues node, Analysis analysis) {
         DocTableInfo tableInfo = schemas.getTableInfo(
-            TableIdent.of(node.table(), analysis.sessionContext().defaultSchema()), Operation.INSERT);
+            TableIdent.of(node.table(), analysis.sessionContext().defaultSchema()),
+            Operation.INSERT,
+            analysis.sessionContext().user()
+        );
 
         DocTableRelation tableRelation = new DocTableRelation(tableInfo);
         FieldProvider fieldProvider = new NameFieldProvider(tableRelation);
@@ -139,7 +143,8 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                 node.onDuplicateKeyAssignments(),
                 statement,
                 analysis.parameterContext(),
-                refToLiteral);
+                refToLiteral,
+                analysis.sessionContext().user());
         }
         return statement;
     }
@@ -186,7 +191,8 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                                List<Assignment> assignments,
                                InsertFromValuesAnalyzedStatement statement,
                                ParameterContext parameterContext,
-                               ReferenceToLiteralConverter refToLiteral) {
+                               ReferenceToLiteralConverter refToLiteral,
+                               User user) {
         validateValuesSize(node.values(), statement, tableRelation);
 
         try {
@@ -212,7 +218,8 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                         refToLiteral,
                         numPks,
                         idFunction,
-                        i
+                        i,
+                        user
                     );
                 }
             } else {
@@ -231,7 +238,8 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                     refToLiteral,
                     numPks,
                     idFunction,
-                    -1
+                    -1,
+                    user
                 );
             }
         } catch (IOException e) {
@@ -253,7 +261,8 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                            ReferenceToLiteralConverter refToLiteral,
                            int numPrimaryKeys,
                            Function<List<BytesRef>, String> idFunction,
-                           int bulkIdx) throws IOException {
+                           int bulkIdx,
+                           User user) throws IOException {
         if (context.tableInfo().isPartitioned()) {
             context.newPartitionMap();
         }
@@ -273,7 +282,7 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
             final ColumnIdent columnIdent = column.ident().columnIdent();
             Object value;
             try {
-                valuesSymbol = valueNormalizer.normalizeInputForReference(valuesSymbol, column);
+                valuesSymbol = valueNormalizer.normalizeInputForReference(valuesSymbol, column, user);
                 value = ((Input) valuesSymbol).value();
             } catch (IllegalArgumentException | UnsupportedOperationException e) {
                 throw new ColumnValidationException(columnIdent.sqlFqn(), e);
@@ -331,7 +340,7 @@ class InsertFromValuesAnalyzer extends AbstractInsertAnalyzer {
                 Symbol valueSymbol = normalizer.normalize(
                     valuesAwareExpressionAnalyzer.convert(assignment.expression(), expressionAnalysisContext),
                     transactionContext);
-                Symbol assignmentExpression = valueNormalizer.normalizeInputForReference(valueSymbol, columnName);
+                Symbol assignmentExpression = valueNormalizer.normalizeInputForReference(valueSymbol, columnName, user);
                 onDupKeyAssignments[i] = assignmentExpression;
 
                 if (valuesResolver.assignmentColumns.size() == i) {
