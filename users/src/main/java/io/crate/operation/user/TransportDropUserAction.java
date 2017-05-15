@@ -107,7 +107,7 @@ public class TransportDropUserAction extends TransportMasterNodeAction<DropUserR
                          boolean ifExists) {
         if ((oldMetaData == null || !oldMetaData.contains(name))) {
             if (ifExists) {
-                UsersMetaData newMetaData = oldMetaData == null ? UsersMetaData.of() : oldMetaData;
+                UsersMetaData newMetaData = oldMetaData == null ? new UsersMetaData() : oldMetaData;
                 mdBuilder.putCustom(UsersMetaData.TYPE, newMetaData);
                 return 0L;
             }

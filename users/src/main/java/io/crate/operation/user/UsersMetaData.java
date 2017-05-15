@@ -36,20 +36,16 @@ public class UsersMetaData extends AbstractDiffable<MetaData.Custom> implements 
 
     private final List<String> users;
 
-    private UsersMetaData() {
+    UsersMetaData() {
         this.users = new ArrayList<>();
     }
 
-    private UsersMetaData(List<String> users) {
+    UsersMetaData(List<String> users) {
         this.users = users;
     }
 
     public static UsersMetaData newInstance(UsersMetaData instance) {
         return new UsersMetaData(new ArrayList<>(instance.users));
-    }
-
-    static UsersMetaData of(String... user) {
-        return new UsersMetaData(Arrays.asList(user));
     }
 
     public boolean contains(String name) {

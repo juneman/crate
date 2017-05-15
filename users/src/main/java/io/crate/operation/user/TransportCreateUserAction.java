@@ -36,6 +36,8 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.transport.TransportService;
 
+import java.util.Collections;
+
 public class TransportCreateUserAction extends TransportMasterNodeAction<CreateUserRequest, WriteUserResponse> {
 
     public TransportCreateUserAction(Settings settings,
@@ -100,7 +102,7 @@ public class TransportCreateUserAction extends TransportMasterNodeAction<CreateU
     static UsersMetaData putUser(@Nullable UsersMetaData oldMetaData,
                                  String name) {
         if (oldMetaData == null) {
-            return UsersMetaData.of(name);
+            return new UsersMetaData(Collections.singletonList(name));
         }
         if (oldMetaData.contains(name)) {
             throw new ConflictException("User already exists");

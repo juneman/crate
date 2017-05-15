@@ -18,6 +18,7 @@
 
 package io.crate.operation.user;
 
+import com.google.common.collect.ImmutableList;
 import io.crate.test.integration.CrateUnitTest;
 import org.elasticsearch.common.io.stream.BytesStreamOutput;
 import org.elasticsearch.common.io.stream.StreamInput;
@@ -34,12 +35,12 @@ public class UsersMetaDataTest extends CrateUnitTest {
 
     @Test
     public void testUsersMetaDataStreaming() throws IOException {
-        UsersMetaData users = UsersMetaData.of("Trillian");
+        UsersMetaData users = new UsersMetaData(ImmutableList.of("Trillian"));
         BytesStreamOutput out = new BytesStreamOutput();
         users.writeTo(out);
 
         StreamInput in = out.bytes().streamInput();
-        UsersMetaData users2 = (UsersMetaData)UsersMetaData.of().readFrom(in);
+        UsersMetaData users2 = (UsersMetaData)new UsersMetaData().readFrom(in);
         assertEquals(users, users2);
     }
 
@@ -50,13 +51,13 @@ public class UsersMetaDataTest extends CrateUnitTest {
         // reflects the logic used to process custom metadata in the cluster state
         builder.startObject();
 
-        UsersMetaData users = UsersMetaData.of("Ford", "Arthur");
+        UsersMetaData users = new UsersMetaData(ImmutableList.of("Ford", "Arthur"));
         users.toXContent(builder, ToXContent.EMPTY_PARAMS);
         builder.endObject();
 
         XContentParser parser = JsonXContent.jsonXContent.createParser(builder.bytes());
         parser.nextToken(); // start object
-        UsersMetaData users2 = (UsersMetaData) UsersMetaData.of().fromXContent(parser);
+        UsersMetaData users2 = (UsersMetaData)new UsersMetaData().fromXContent(parser);
         assertEquals(users, users2);
     }
 }

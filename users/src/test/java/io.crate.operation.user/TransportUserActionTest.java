@@ -24,6 +24,7 @@ import org.elasticsearch.ResourceNotFoundException;
 import org.elasticsearch.cluster.metadata.MetaData;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.contains;
@@ -31,6 +32,10 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 
 public class TransportUserActionTest extends CrateUnitTest {
+
+    UsersMetaData usersMetaDataOf(String... users) {
+        return new UsersMetaData(Arrays.asList(users));
+    }
 
     @Test
     public void testCreateFirstUser() throws Exception {
@@ -43,13 +48,13 @@ public class TransportUserActionTest extends CrateUnitTest {
     public void testCreateUserAlreadyExists() throws Exception {
         expectedException.expect(ConflictException.class);
         expectedException.expectMessage("User already exists");
-        UsersMetaData oldMetaData = UsersMetaData.of("root");
+        UsersMetaData oldMetaData = usersMetaDataOf("root");
         TransportCreateUserAction.putUser(oldMetaData, "root");
     }
 
     @Test
     public void testCreateUser() throws Exception {
-        UsersMetaData oldMetaData = UsersMetaData.of("Trillian");
+        UsersMetaData oldMetaData = usersMetaDataOf("Trillian");
         UsersMetaData newMetaData = TransportCreateUserAction.putUser(oldMetaData, "Arthur");
         assertThat(newMetaData.users(), containsInAnyOrder("Trillian", "Arthur"));
     }
@@ -75,7 +80,7 @@ public class TransportUserActionTest extends CrateUnitTest {
         expectedException.expectMessage("User does not exist");
         TransportDropUserAction.dropUser(
             MetaData.builder(),
-            UsersMetaData.of("arthur"),
+            usersMetaDataOf("arthur"),
             "trillian",
             false
         );
@@ -86,7 +91,7 @@ public class TransportUserActionTest extends CrateUnitTest {
         MetaData.Builder mdBuilder = MetaData.builder();
         long res = TransportDropUserAction.dropUser(
             mdBuilder,
-            UsersMetaData.of("arthur"),
+            usersMetaDataOf("arthur"),
             "trillian",
             true
         );
@@ -96,7 +101,7 @@ public class TransportUserActionTest extends CrateUnitTest {
 
     @Test
     public void testDropUser() throws Exception {
-        UsersMetaData oldMetaData = UsersMetaData.of("ford", "arthur");
+        UsersMetaData oldMetaData = usersMetaDataOf("ford", "arthur");
         MetaData.Builder mdBuilder = MetaData.builder();
         long res = TransportDropUserAction.dropUser(mdBuilder, oldMetaData, "arthur", false);
         assertThat(users(mdBuilder), contains("ford"));
