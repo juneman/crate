@@ -44,13 +44,14 @@ public class UserManagerService implements UserManager, ClusterStateListener {
 
     static User CRATE_USER = new User("crate", EnumSet.of(User.Role.SUPERUSER));
 
+    private static final PermissionVisitor PERMISSION_VISITOR = new PermissionVisitor();
+
     static {
         MetaData.registerPrototype(TYPE, PROTO);
     }
 
     private final TransportCreateUserAction transportCreateUserAction;
     private final TransportDropUserAction transportDropUserAction;
-    private final PermissionVisitor permissionVisitor = new PermissionVisitor();
     private volatile Set<User> users = ImmutableSet.of(CRATE_USER);
 
     public UserManagerService(TransportCreateUserAction transportCreateUserAction,
@@ -92,7 +93,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
     @Override
     public void checkPermission(AnalyzedStatement analyzedStatement,
                                    SessionContext sessionContext) {
-        permissionVisitor.process(analyzedStatement, sessionContext);
+        PERMISSION_VISITOR.process(analyzedStatement, sessionContext);
     }
 
     @Override
@@ -114,7 +115,7 @@ public class UserManagerService implements UserManager, ClusterStateListener {
         return null;
     }
 
-    private class PermissionVisitor extends AnalyzedStatementVisitor<SessionContext, Boolean> {
+    private static class PermissionVisitor extends AnalyzedStatementVisitor<SessionContext, Boolean> {
 
         boolean isSuperUser(@Nullable User user) {
             return user != null && user.roles().contains(User.Role.SUPERUSER);
